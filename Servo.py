@@ -2,6 +2,9 @@ import RPi.GPIO as GPIO
 from multiprocessing import Process, Queue
 import time
 
+def asyncSleep(t, callback):
+    time.sleep(t)
+    callback()
 
 class Servo:
     def __init__(this, pin, hz):
@@ -16,28 +19,28 @@ class Servo:
         this.pwm.start(0)
         this.pin = pin
 
-        this.queue = Queue()
-
-    def setAngle(this, angle, time=1) -> None:
-        """
-        setAngle(angle) : sets the angle of the sevo, using a background task to avoid blocking\n
-        angle : int, the angle to set the servo\n
-        time  : time to wait to turn the servo (1s to be safe, but can be measured) 
-        """
-        p = Process(target=this.setAngle, args=(this,angle,time))
-        p.start()
+        this.isMoving = False
 
 
-    #helper function
-    def setAngleTask(this, angle, t=1) -> None:
+    def setAngle(this,angle,t=1):
         """
         setAngleTask(angle, time) : communicates with servo to set its angle\n
         angle : int, the angle to set the servo\n
         time  : time to wait to turn the servo (1s to be safe, but can be measured) 
         """
-        #thread safe communication, sets "isMoving" flag
-        this.queue.put([True])
+        if not this.isMoving:
+            this.setAngleHelper(angle,t)
+        else:
+            print("servo is currently moving")
 
+    #helper function
+    def setAngleHelper(this, angle, t=1) -> None:
+        """
+        setAngleTask(angle, time) : communicates with servo to set its angle\n
+        angle : int, the angle to set the servo\n
+        time  : time to wait to turn the servo (1s to be safe, but can be measured) 
+        """
+        this.isMoving = True
         GPIO.output(this.pin, True)
 
         #send duty cycle for given angle
@@ -45,20 +48,18 @@ class Servo:
         this.pwm.ChangeDutyCycle(duty)
 
         #wait for servo to turn
-        time.sleep(t)
+        p = Process(target=asyncSleep, args=(time, this.afterMove))
+        p.start()
 
+        
+
+    def afterMove(this):
         this.pwm.ChangeDutyCycle(0)
 
         GPIO.output(this.pin, False)
 
-        this.queue.put([False])
+        this.isMoving = False
 
-    def isMoving(this) -> bool:
-        """
-        isMoving() : checks if the servo is actively moving\n
-        returns : bool
-        """
-        return this.queue.get()[0]
 
 
 if "__main__" in __name__:
