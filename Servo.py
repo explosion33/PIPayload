@@ -24,7 +24,7 @@ class Servo:
         angle : int, the angle to set the servo\n
         time  : time to wait to turn the servo (1s to be safe, but can be measured) 
         """
-        p = Process(target=this.setAngle, args=(angle,time))
+        p = Process(target=this.setAngle, args=(this,angle,time))
         p.start()
 
 
@@ -36,7 +36,7 @@ class Servo:
         time  : time to wait to turn the servo (1s to be safe, but can be measured) 
         """
         #thread safe communication, sets "isMoving" flag
-        #this.queue.put([True])
+        this.queue.put([True])
 
         GPIO.output(this.pin, True)
 
@@ -51,7 +51,7 @@ class Servo:
 
         GPIO.output(this.pin, False)
 
-        #this.queue.put([False])
+        this.queue.put([False])
 
     def isMoving(this) -> bool:
         """
