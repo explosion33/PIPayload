@@ -29,14 +29,14 @@ class Servo:
 
 
     #helper function
-    def setAngleTask(this, angle, time=1) -> None:
+    def setAngleTask(this, angle, t=1) -> None:
         """
         setAngleTask(angle, time) : communicates with servo to set its angle\n
         angle : int, the angle to set the servo\n
         time  : time to wait to turn the servo (1s to be safe, but can be measured) 
         """
         #thread safe communication, sets "isMoving" flag
-        this.queue.put([True])
+        #this.queue.put([True])
 
         GPIO.output(this.pin, True)
 
@@ -45,13 +45,13 @@ class Servo:
         this.pwm.ChangeDutyCycle(duty)
 
         #wait for servo to turn
-        time.sleep(time)
+        time.sleep(t)
 
         this.pwm.ChangeDutyCycle(0)
 
         GPIO.output(this.pin, False)
 
-        this.queue.put([False])
+        #this.queue.put([False])
 
     def isMoving(this) -> bool:
         """

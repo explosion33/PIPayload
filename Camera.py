@@ -40,4 +40,4 @@ if "__main__" in __name__:
         print(i)
         i += 1
         time.sleep(1)
-    c.stopCamera
+    c.stopCamera()
