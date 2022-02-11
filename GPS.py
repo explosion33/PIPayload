@@ -37,8 +37,8 @@ class GPS:
 
     def update(this):
         hasNewData = this.gps.update()
-        print(hasNewData)
-        if hasNewData:
+        print(hasNewData, gps.has_fix)
+        if gps.has_fix:
             this.updated = True
 
             this.data["time"]["month"]  = this.gps.timestamp_utc.tm_mon, # Grab parts of the time from the
