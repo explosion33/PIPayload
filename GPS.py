@@ -37,7 +37,7 @@ class GPS:
 
     def update(this):
         hasNewData = this.gps.update()
-        print(hasNewData, gps.has_fix)
+        print(hasNewData, this.gps.has_fix)
         if gps.has_fix:
             this.updated = True
 
