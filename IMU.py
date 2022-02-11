@@ -1,5 +1,5 @@
 import board
-import Adafruit_BNO055
+import adafruit_bno055
 
 class IMU:
     """
@@ -58,11 +58,12 @@ class IMU:
 
 if "__main__" in __name__:
     sensors = IMU()
-    print("Temp: {}; ".format(sensors.temp()))
-    print("Accel: {}; ".format(sensors.accel()))
-    print("Mag: {}; ".format(sensors.mag()))
-    print("Gyro: {}; ".format(sensors.gyro()))
-    print("Euler: {}; ".format(sensors.euler()))
-    print("Quaternion: {}; ".format(sensors.quaternion()))
-    print("Linear Accel: {}; ".format(sensors.linear_accel()))
-    print("Gravity: {}; ".format(sensors.gravity()))
+    while True:
+        print("Temp: {}; ".format(sensors.temp()))
+        print("Accel: {}; ".format(sensors.accel()))
+        print("Mag: {}; ".format(sensors.mag()))
+        print("Gyro: {}; ".format(sensors.gyro()))
+        print("Euler: {}; ".format(sensors.euler()))
+        print("Quaternion: {}; ".format(sensors.quaternion()))
+        print("Linear Accel: {}; ".format(sensors.linear_accel()))
+        print("Gravity: {}; ".format(sensors.gravity()))
