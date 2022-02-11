@@ -48,20 +48,23 @@ class Servo:
         this.pwm.ChangeDutyCycle(duty)
 
         #wait for servo to turn
-        p = Process(target=asyncSleep, args=(time, this.afterMove))
-        p.start()
+        time.sleep(t)
 
-        
-
-    def afterMove(this):
         this.pwm.ChangeDutyCycle(0)
 
         GPIO.output(this.pin, False)
 
         this.isMoving = False
 
+        
+
+    def afterMove(this):
+        pass
+
 
 
 if "__main__" in __name__:
-    s = Servo(3,50)
-    s.setAngle(40)
+    s = Servo(11,50)
+
+    p = Process(target=s.setAngle, args=(0,))
+    p.start()
