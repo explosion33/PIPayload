@@ -13,13 +13,7 @@ class Servo:
         pin : PWM pin for servo communication\n
         hz  : frequency in hertz to communicate with the servo
         """
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(pin, GPIO.OUT)
-        this.pwm = GPIO.PWM(pin, hz)
-        this.pwm.start(0)
-        this.pin = pin
-
-        this.isMoving = False
+        
 
 
     def setAngle(this,angle,t=1):
@@ -41,18 +35,7 @@ class Servo:
         time  : time to wait to turn the servo (1s to be safe, but can be measured) 
         """
         this.isMoving = True
-        GPIO.output(this.pin, True)
-
-        #send duty cycle for given angle
-        duty = angle/18 + 2
-        this.pwm.ChangeDutyCycle(duty)
-
-        #wait for servo to turn
-        time.sleep(t)
-
-        this.pwm.ChangeDutyCycle(0)
-
-        GPIO.output(this.pin, False)
+        
 
         this.isMoving = False
 
@@ -61,6 +44,25 @@ class Servo:
     def afterMove(this):
         pass
 
+
+def moveServo(pin, hz, angle, t=1):
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(pin, GPIO.OUT)
+    pwm = GPIO.PWM(pin, hz)
+    pwm.start(0)
+
+    GPIO.output(pin, True)
+
+    #send duty cycle for given angle
+    duty = angle/18 + 2
+    pwm.ChangeDutyCycle(duty)
+
+    #wait for servo to turn
+    time.sleep(t)
+
+    pwm.ChangeDutyCycle(0)
+
+    GPIO.output(pin, False)
 
 
 if "__main__" in __name__:
