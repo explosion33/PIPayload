@@ -33,12 +33,11 @@ def moveServo(pin, hz, angle, t=1):
 
     GPIO.cleanup(pin)
 
-
 def updateList():
     """
     updateList() : updates the list of active pins 
     """
-    for pin, process in active_servos:
+    for pin, process in active_servos.items():
         if process != None:
             if not process.is_alive():
                 active_servos[pin] = None
@@ -57,7 +56,7 @@ def isMoving(pin):
         active_servos[pin] = None
         return False
 
-    return active_servos[pin] == None
+    return active_servos[pin] != None
 
 def moveServoAsync(pin, hz, angle, t=1):
     """
@@ -74,7 +73,7 @@ def moveServoAsync(pin, hz, angle, t=1):
 
 if "__main__" in __name__:
     moveServoAsync(11,50,0,1)
-    
+
     while isMoving(11):
         pass
 
