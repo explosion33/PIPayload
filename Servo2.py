@@ -10,8 +10,8 @@ class Servo:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(pin, GPIO.OUT)
 
-        pwm = GPIO.PWM(pin, hz)
-        pwm.start(startAngle)
+        this.pwm = GPIO.PWM(pin, hz)
+        this.pwm.start(startAngle)
     
     def changeAngle(this, angle, t=1):
         GPIO.output(this.pin, True)
@@ -27,4 +27,4 @@ class Servo:
 if "__main__" in __name__:
     s = Servo(11)
     s.changeAngle(90)
-    
+
