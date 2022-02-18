@@ -26,10 +26,11 @@ def main():
     while True:
         currentTime = time.time() - startTime
         if readyToDeploy(currentTime) and not deployed:
+            print("moving")
             s.changeAngle(180)
             deployed = True
 
-        sensorLog.log(str(time.time()))
+        sensorLog.log(str(currentTime) + " s; ")
         logSensors(sensorLog, sensors)
 
         transmitData()
@@ -38,9 +39,9 @@ def main():
 
         gps.update()
         if gps.hasNewData():
-            print(gps.getData())
+            pass#print(gps.getData())
         else:
-            print("no satelite fix")
+            pass#print("no satelite fix")
 
 
 def transmitData():
