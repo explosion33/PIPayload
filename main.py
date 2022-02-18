@@ -48,7 +48,7 @@ def transmitData():
     pass
 
 def readyToDeploy(currentTime):
-    currentTime >= 10
+    return currentTime >= 10
 
 def logSensors(sensorLog, sensors):
     sensorLog.log("Temp: {}; ".format(sensors.temp()))
