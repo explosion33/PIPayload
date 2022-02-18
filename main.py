@@ -3,18 +3,21 @@ from IMU import IMU
 from Logger import Logger
 from Camera import Camera
 from Servo2 import Servo
+from GPS import GPS
 
 
 def main():
     sensors = IMU()
     sensorLog = Logger("sensors.log")
 
-    s = Servo(11,50,0)
+    s = Servo(17,50,0)
     s.setAngle(0)
 
     c = Camera((640,480))
     c.startCamera('my_video.h264')
     
+    gps = GPS()
+
     while True:
         if readyToDeploy():
             s.setAngle(180)
@@ -24,7 +27,11 @@ def main():
 
         transmitData()
 
-        time.sleep(1)
+        gps.update()
+        if gps.hasNewData():
+            print(gps.getData())
+        else:
+            print("no satelite fix")
 
 
 def transmitData():

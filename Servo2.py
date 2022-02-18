@@ -7,7 +7,7 @@ class Servo:
     def __init__(this, pin, hz=50, startAngle=0):
         this.pin = pin
 
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.OUT)
 
         this.pwm = GPIO.PWM(pin, hz)
@@ -25,6 +25,6 @@ class Servo:
 
 
 if "__main__" in __name__:
-    s = Servo(11)
+    s = Servo(17)
     s.changeAngle(90)
 
