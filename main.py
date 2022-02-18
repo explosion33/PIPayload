@@ -2,22 +2,22 @@ import time
 from IMU import IMU
 from Logger import Logger
 from Camera import Camera
-from Servo import Servo
+from Servo import Servo2
 
 
 def main():
     sensors = IMU()
     sensorLog = Logger("sensors.log")
 
-    s = Servo(3,50)
-    s.setAngle(90)
+    s = Servo2(11,50,0)
+    s.setAngle(0)
 
     c = Camera((640,480))
     c.startCamera('my_video.h264')
     
     while True:
         if readyToDeploy():
-            s.setAngle(0)
+            s.setAngle(180)
 
         sensorLog.log(time.time())
         logSensors(sensorLog, sensors)
@@ -31,7 +31,7 @@ def transmitData():
     pass
 
 def readyToDeploy():
-    return False
+    time.time(10)
 
 def logSensors(sensorLog, sensors):
     sensorLog.log("Temp: {}; ".format(sensors.temp()))
