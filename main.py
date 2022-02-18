@@ -18,14 +18,23 @@ def main():
     
     gps = GPS()
 
+    startTime = time.time()
+    currentTime = 0
+
+    deployed = False
+
     while True:
-        if readyToDeploy():
+        currentTime = time.time() - startTime
+        if readyToDeploy(currentTime) and not deployed:
             s.changeAngle(180)
+            deployed = True
 
         sensorLog.log(str(time.time()))
         logSensors(sensorLog, sensors)
 
         transmitData()
+
+        print(currentTime)
 
         gps.update()
         if gps.hasNewData():
@@ -37,8 +46,8 @@ def main():
 def transmitData():
     pass
 
-def readyToDeploy():
-    time.time() >= 10
+def readyToDeploy(currentTime):
+    currentTime >= 10
 
 def logSensors(sensorLog, sensors):
     sensorLog.log("Temp: {}; ".format(sensors.temp()))
