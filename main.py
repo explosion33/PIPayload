@@ -11,7 +11,7 @@ def main():
     sensorLog = Logger("sensors.log")
 
     s = Servo(17,50,0)
-    s.setAngle(0)
+    s.changeAngle(0)
 
     c = Camera((640,480))
     c.startCamera('my_video.h264')
@@ -20,7 +20,7 @@ def main():
 
     while True:
         if readyToDeploy():
-            s.setAngle(180)
+            s.changeAngle(180)
 
         sensorLog.log(time.time())
         logSensors(sensorLog, sensors)
