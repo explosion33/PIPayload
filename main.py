@@ -22,7 +22,7 @@ def main():
         if readyToDeploy():
             s.changeAngle(180)
 
-        sensorLog.log(time.time())
+        sensorLog.log(str(time.time()))
         logSensors(sensorLog, sensors)
 
         transmitData()
