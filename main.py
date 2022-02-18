@@ -2,14 +2,14 @@ import time
 from IMU import IMU
 from Logger import Logger
 from Camera import Camera
-from Servo import Servo2
+from Servo2 import Servo
 
 
 def main():
     sensors = IMU()
     sensorLog = Logger("sensors.log")
 
-    s = Servo2(11,50,0)
+    s = Servo(11,50,0)
     s.setAngle(0)
 
     c = Camera((640,480))
