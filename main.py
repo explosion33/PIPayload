@@ -46,4 +46,4 @@ def logSensors(sensorLog, sensors):
 
 
 if "__main__" in __name__:
-    main(True)
+    main()
