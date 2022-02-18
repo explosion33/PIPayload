@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 import time
-import os
 import serial
 
-from digi.xbee.devices import XBeeDevice, DigiMeshDevice, RemoteXBeeDevice, XBee64BitAddress
-os.system("sudo systemctl stop serial-getty@serial0.service") # what does this do?
+ser = serial.Serial(
+    port='/dev/ttyS0',
+    baudrate = 9600,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    timeout=1             
+ )
+counter=0       
 
+#reads until /n
+def read(ser):
+    data = ser.readline().strip()
+    print(data)
 
-
-receiver = XBeeDevice("/dev/serial0", 9600)
-receiver.open()
-remote_device = RemoteXBeeDevice(receiver, XBee64BitAddress.from_hex_string("0013A20041C7BFD1")) #how does this work
-
-#xbee.send_data(remote_device, "message")
+def write(ser, message):
+    ser.write(str.encode(str(message)))
 
 while True:
-    data_variable = receiver.read_data_from(remote_device)
-    
-    if(data_variable is None):
-        print('No Data Found')
-    else:
-        print(data_variable.data.decode("utf-8"))
-        print(data_variable.timestamp)
-        print("============================")
-        print()
-    time.sleep(3)
-
-receiver.close()
+    #read(ser)
+    write(ser, "test data")
