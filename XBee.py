@@ -1,25 +1,10 @@
-#!/usr/bin/env python
-import time
-import serial
+from digi.xbee.devices import DigiMeshDevice, RemoteDigiMeshDevice, XBee64BitAddress
+ 
 
-ser = serial.Serial(
-    port='/dev/ttyS0',
-    baudrate = 9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1             
- )
-counter=0       
+device = DigiMeshDevice("/dev/serial0", 9600)
+device.open()
 
-#reads until /n
-def read(ser):
-    data = ser.readline().strip()
-    print(data)
-
-def write(ser, message):
-    ser.write(str.encode(str(message)))
+remote_device = RemoteDigiMeshDevice(device, XBee64BitAddress.from_hex_string("13A20041C7BFFC"))
 
 while True:
-    #read(ser)
-    write(ser, "test data")
+    device.send_data(remote_device, "test data")
