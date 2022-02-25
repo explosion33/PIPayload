@@ -3,37 +3,34 @@ function rand() {
 }
   
 Plotly.plot('graph', [{
-    x: [1,2,3],
-    y: [1,1,1],
+    x: [],
+    y: [],
     mode: 'lines',
     line: {color: '#80CAF6'}
 }]);
 
 var cnt = 0;
-var t = 3;
 
 //some api / serial data request
-var getNewData = function() {
-    //data in the form of
-    //[{x:int,y:int},...]
-
-    var m = rand()*3 //1-3
+async function getNewData() {
+    var res = await fetch("/getData"+cnt)
+    var d   = await res.json()
+            
     var data = []
-
-    for (let i = 0; i<m; i++) {
-        data[i] = {x:rand(),y:rand()};
+    for (let i = 0; i<d.length; i++) {
+        cnt += 1;
+        data[i] = {x: d[i][0], y: d[i][1]};
     }
 
-    return data
+    return data;
 }
 
-var updateGraph = function() {
-    var data = getNewData()
+var updateGraph = async function() {
+    var data = await getNewData()
 
     data.forEach(point => {
         Plotly.extendTraces('graph', {y: [[point.y]], x: [[point.x]]}, [0])
     });
-    if(cnt === 100) clearInterval(interval);
 }
 
 
