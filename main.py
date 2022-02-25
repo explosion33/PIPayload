@@ -30,7 +30,7 @@ def main():
             s.changeAngle(180)
             deployed = True
 
-        sensorLog.log(str(currentTime) + " s; ")
+        sensorLog.log("'time': '" + str(currentTime) + "', ")
         logSensors(sensorLog, sensors)
 
         transmitData()
@@ -51,14 +51,16 @@ def readyToDeploy(currentTime):
     return currentTime >= 10
 
 def logSensors(sensorLog, sensors):
-    sensorLog.log("Temp: {}; ".format(sensors.temp()))
-    sensorLog.log("Accel: {}; ".format(sensors.accel()))
-    sensorLog.log("Mag: {}; ".format(sensors.mag()))
-    sensorLog.log("Gyro: {}; ".format(sensors.gyro()))
-    sensorLog.log("Euler: {}; ".format(sensors.euler()))
-    sensorLog.log("Quaternion: {}; ".format(sensors.quaternion()))
-    sensorLog.log("Linear Accel: {}; ".format(sensors.linear_accel()))
-    sensorLog.log("Gravity: {}; ".format(sensors.gravity()))
+    sensorLog.log("{")
+    sensorLog.log("'temp': '{}', ".format(sensors.temp()))
+    sensorLog.log("'accel': '{}', ".format(sensors.accel()))
+    sensorLog.log("'mag': '{}', ".format(sensors.mag()))
+    sensorLog.log("'gyro': '{}', ".format(sensors.gyro()))
+    sensorLog.log("'euler': '{}', ".format(sensors.euler()))
+    sensorLog.log("'quaternion': '{}', ".format(sensors.quaternion()))
+    sensorLog.log("'linear Accel': '{}', ".format(sensors.linear_accel()))
+    sensorLog.log("'gravity': '{}', ".format(sensors.gravity()))
+    sensorLog.log("}")
     sensorLog.logLine()
 
 
