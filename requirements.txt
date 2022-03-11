@@ -1,0 +1,3 @@
+Adafruit-BMP
+Adafruit-BNO055
+digi-xbee
