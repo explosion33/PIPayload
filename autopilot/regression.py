@@ -46,12 +46,22 @@ def regressOnce(points, function):
                 error = newError
     return function
 
-if "__main__" in __name__:
-    points = [[0,30], [1,29],[2,26],[5,5]] #y=30-x^2 [30,0,-1]
+def regress(points, times):
     function = [0,0,0,0,0]
-
-    
     for i in range(100):
-        print(getError(points,function), function)
         function = regressOnce(points,function)
-    print(getError(points,function), function)
+    return function
+
+
+if "__main__" in __name__:
+    points = [
+        [-4,-1.982],
+        [0,3],
+        [1,5.718],
+        [2,11.389],
+        [3,25.086],
+        [4,60.598],
+    ]
+
+    print(regress(points,100))
+    
