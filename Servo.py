@@ -1,4 +1,6 @@
-from tkinter.messagebox import NO
+"""
+moves a servo in a seperate task using functional programming methods
+"""
 import RPi.GPIO as GPIO
 from multiprocessing import Process, Queue
 import time

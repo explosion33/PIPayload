@@ -1,4 +1,3 @@
-import imp
 import picamera
 from multiprocessing import Process, Queue
 
