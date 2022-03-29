@@ -1,4 +1,7 @@
-from tkinter.messagebox import NO
+"""
+moves the servo in a polymorphic manner
+does not move the servo in a task, instead maintains a constant pwm signal with the servo
+"""
 import RPi.GPIO as GPIO
 from multiprocessing import Process, Queue
 import time

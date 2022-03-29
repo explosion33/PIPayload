@@ -17,8 +17,9 @@ class Barometer:
                 return False
             this.baseHeight   = float(base[0].strip().replace("\n", ""))
             this.basePressure = float(base[1].strip().replace("\n", ""))
-            
+
             print(this.baseHeight, this.basePressure)
+            
         return True
 
     def calibrate(this, currentHeight):
@@ -29,8 +30,10 @@ class Barometer:
 
     def getTemperature(this):
         return this.bmp.read_temperature()
+
     def getPressure(this):
         return this.bmp.read_pressure()
+
     def getAltitude(this):
         #uses the hypsometric formula
         P = this.getPressure()
