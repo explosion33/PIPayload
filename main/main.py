@@ -1,6 +1,5 @@
 import time
 
-from matplotlib.pyplot import bar
 from IMU import IMU
 from Logger import Logger
 from Camera import Camera
