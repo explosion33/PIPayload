@@ -1,3 +1,10 @@
+"""
+Ethan Armstrong
+warmst@uw.edu
+Acts as the main controller for the drone/payload
+this program handles creation of all sensor/logging objects
+and maintains an event loop
+"""
 import time
 
 from IMU import IMU

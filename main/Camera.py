@@ -1,12 +1,28 @@
+"""
+Ethan Armstrong
+warmst@uw.edu
+Implements Camera class and test method
+"""
 import picamera
 from multiprocessing import Process, Queue
 
 class Camera:
+    """
+    Camera object to handle rudementry video recording to a file
+    """
     def __init__(this, resolution):
+        """
+        Camera(resolution) | creates a new Camera object\n
+        resolution | (tuple) (w,h) resolution of recorded video
+        """
         this.camera = picamera.PiCamera()
         this.camera.resolution = resolution
 
     def startCamera(this, name):
+        """
+        startCamera(name) | starts a camera recording\n
+        name | filename to record video to, including extension
+        """
         this.camera.start_recording(name)
 
     def startCameraTask(this, resolution, name) -> Process:
@@ -22,6 +38,9 @@ class Camera:
         this.process = p
     
     def stopCamera(this):
+        """
+        stopCamera() | stops the cameras current recording
+        """
         this.camera.stop_recording()
 
 

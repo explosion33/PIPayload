@@ -1,3 +1,8 @@
+"""
+Ethan Armstrong
+warmst@uw.edu
+Implements GPS class
+"""
 import time
 import board
 import busio
@@ -5,7 +10,13 @@ import adafruit_gps
 import serial
 
 class GPS:
+    """
+    GPS interface to read and format gps data from an adafruit ultimate GPS breakout
+    """
     def __init__(this):
+        """
+        GPS() | creates a new GPS object
+        """
         this.uart = serial.Serial("/dev/serial0", baudrate=9600, timeout=10)
         this.gps = adafruit_gps.GPS(this.uart, debug=False) # Use UART/pyserial
 
@@ -36,6 +47,9 @@ class GPS:
         }
 
     def update(this):
+        """
+        update() | updates stored gps data if new data is available
+        """
         hasNewData = this.gps.update()
         
         if this.gps.has_fix:
@@ -62,10 +76,17 @@ class GPS:
 
 
     def getData(this):
+        """
+        getData() | gets most recent gps data
+        """
         this.updated = False
         return this.data
 
     def hasNewData(this):
+        """
+        hasNewData() | checks for new data\n
+        returns : True if there is data that has not been retrieved with getData(), False otherwise
+        """
         return this.updated
 
 

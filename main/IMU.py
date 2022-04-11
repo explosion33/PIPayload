@@ -1,3 +1,8 @@
+"""
+Ethan Armstrong
+warmst@uw.edu
+implements IMU class and test method
+"""
 import board
 import adafruit_bno055
 
@@ -15,6 +20,10 @@ class IMU:
         gravity()\n
     """
     def __init__(this, i2c = None):
+        """
+        IMU(i2c) | creates a new IMU object\n
+        i2c | an adafruit board.I2C object, will create a new one if not provided
+        """
         if not i2c:
             i2c = board.I2C()
         this.i2c = i2c

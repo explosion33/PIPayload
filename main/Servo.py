@@ -1,5 +1,8 @@
 """
-moves a servo in a seperate task using functional programming methods
+Ethan Armstrong
+warmst@uw.edu
+Implements functions to move a servo, both syncronously and asyncronously
+implements a test method
 """
 import RPi.GPIO as GPIO
 from multiprocessing import Process, Queue

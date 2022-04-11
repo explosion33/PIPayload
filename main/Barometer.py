@@ -1,9 +1,21 @@
+"""
+Ethan Armstrong
+warmst@uw.edu
+Implements the Barmoter class as well as test functionality
+"""
 import Adafruit_BMP.BMP085 as BMP085
 
 class Barometer:
+    """
+    Baromter object acts as an interface for a connected adafruit bno055 (9dof) IMU breakout board
+    """
     def __init__(this) -> None:
+        """
+        Baromter() | creates a new Baromter object
+        """
         this.bmp = BMP085.BMP085()
 
+        #check for saved altitude calibration in TPTA.conf, if not use SPT
         if not this.readCalibration():
             print("warning barometer has not been calibrated\ncalls to getAltitude() may not be accurate")
             #average sea level pressure
@@ -11,6 +23,10 @@ class Barometer:
             this.basePressure = 1013.25
 
     def readCalibration(this):
+        """
+        readCalibration() | reads a calibration file "TPTA.conf" for stored calibration values
+        """
+
         with open("TPTA.conf", "r") as f:
             base = f.readlines()
             if (len(base) < 2):
@@ -23,19 +39,35 @@ class Barometer:
         return True
 
     def calibrate(this, currentHeight):
+        """
+        calibrate(currentHeight) | calibrates the sensor for a given location\n
+        currentHeight | (float) current known altitude
+        """
         with open("TPTA.conf", "w") as f:
             f.write(str(currentHeight))
             f.write("\n")
             f.write(str(this.getPressure()))
 
     def getTemperature(this):
+        """
+        getTemperature() | gets temperature\n
+        returns : (float) C
+        """
         return this.bmp.read_temperature()
 
     def getPressure(this):
+        """
+        getPressure() | gets current pressure\n
+        returns : (float) Pa
+        """
         return this.bmp.read_pressure()
 
     def getAltitude(this):
-        #uses the hypsometric formula
+        """
+        getAltitude() | gets current altitude\n
+        returns : (float) meters
+        """
+        #use the hypsometric formula to calculate altitude from temp and pressure
         P = this.getPressure()
         T = this.getTemperature() + 273.15 #C to Kelvin
         RATIO = 1.0/5.257
@@ -51,3 +83,4 @@ if "__main__" in __name__:
     while True:
         print(str(baro.getAltitude()) +" m", str(baro.getPressure()) + " Pa", str(baro.getTemperature()) + " C")
         time.sleep(1)
+
