@@ -112,7 +112,7 @@ if "__main__" in __name__:
     import matplotlib.pyplot as plt
     import numpy as np
     points = [
-        ( 0.5 , 60.0 ),
+        ( 0 , 60.0 ),
         ( 1 , 45.0 ),
         ( 2 , 27.0 ),
         ( 3 , 10.0 ),
