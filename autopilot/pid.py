@@ -1,6 +1,3 @@
-from turtle import heading
-
-
 class PID:
     def __init__(this, Kp, Ki, Kd, setpoint):
         this.Kp = Kp
@@ -9,8 +6,6 @@ class PID:
     
         this.lastErrors = []
         this.maxErrors = 5
-
-        this.setpoint = None
 
         this.min = None
         this.max = None
@@ -34,12 +29,15 @@ class PID:
 
 
     def getControlVariable(this, ProcessVariable):
-        error = this.setpoint - ProcessVariable
+        error = this.setpoint - ProcessVariable # current error
 
+        # add error to list of previous errors
+        # if there are too many stored errors, removed oldest one
         this.lastErrors.append(error)
         if len(this.lastErrors) > this.maxErrors:
             this.lastErrors = this.lastErrors[1::]
 
+        # calculate control variable, and constrain
         p = error                 * this.Kp
         i = this.sumErrors()      * this.Ki
         d = this.getErrorChange() * this.Kd
@@ -54,6 +52,7 @@ class PID:
 
 
     def changeSetPoint(this, setpoint):
+        """reset controlller with a new setpoint"""
         this.lastErrors = []
         this.setpoint = setpoint
 
@@ -61,8 +60,7 @@ class PID:
 
 if "__main__" == __name__:
     sp = float(input("Enter Desired Heading: "))
-
-    headingController = PID(0.789,0.4,-0.2991, sp)
+    headingController = PID(6.9, 2.0, -4.89, sp)
     headingController.min = -135
     headingController.max = 135
 
@@ -73,7 +71,7 @@ if "__main__" == __name__:
         if (pv > 360): break
 
         c = headingController.getControlVariable(pv)
-        print(c,(c/135)*30)
+        print(c,((c/135)**3)*30/10)
         points.append(pv)
 
     t  = 0
