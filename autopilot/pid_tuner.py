@@ -1,40 +1,5 @@
-"""
-A simple PID test, implements a small PID heading controller, that gives a servo output and derives a simulated path
-that the servos would turn in order to reach the designated heading (0) from the start heading
-`
-this also includes the ability to calculate the most efficient (critically damped) path and PID constants
-
-currently the only downfall to this controller is that it is unable to determine how exactly a change in servo will affect the heading of the craft
-the controller currently assumes (pobabaly wrong) that one degree of difference from the flat elevon position, is equivelent to 0.1 degree per time unit
-this means that the controller will always calibrate to this metric, and this metric is not accurate
-
-However, this only affects the simulation and the calibration. Because in a real flight, we would use our calibrated constants and a measured variable
-
-TODO
-Implement a way to change, or detect, the rate of elevon movement to the rate of heading change.
-    this is a bit more complicated, perhaps some research is required to determine the speed of rotation for some given properties of the craft (wind tunnel testing)
-    or we will need to run a test flight where we create a graph of rotational speed vs elevon positions,s then re-run the calibration with this new equation
-        side note, this could be done by having the drone fly with flat elevons, calculate a base drift speed, then rotate the elvon to +- 1 degree wait 1 second, calculate speed, etc...
-        we could then use these points and interpolate a function that could be plugged into out pid function
-
-    perhaps, to fix this problem, we implement an in flight tuning method, where we implement the methods above of determining an elevon rotation to roll speed
-    and we spend the first five or so seconds of flight determining these coefficients
-
-Implement a pitch corretion
-    by the nature of the craft, a roll to the right, will also induce a downward pitch, this can be fixed by implementing a second PID controller to account for pitch
-    since both of the controller values output an elevon offset, we would need to mix these values i.e. (pitch + roll) * 0.5 and ensure we truncate the value at servo_max_rotation
-    in essance this looks means the servos would not be perfect polar opposites, but instead have slight variation from each other (from the midpoint)
-
-Make tuning method more efficient
-    1. figure out if there is a way to discard data points
-        what if we detected that increasing the value of a coefficient always leads to higher times, we should halt said coefficient
-"""
-
-
-import math
-
-
 def restrict(var, min, max):
+    """restricts a variable with provide min and max"""
     if var < min:
         return min
     if var > max:
@@ -42,6 +7,7 @@ def restrict(var, min, max):
     return var
 
 def sum(ls):
+    """adds all components of a given list"""
     out = 0
     for val in ls:
         out += val
@@ -52,6 +18,7 @@ def pid(Kp, Ki, Kd, print_values = False):
         "derivative": None,
         "integral": [],
     }
+
     heading = start_heading
     time = 0
 
