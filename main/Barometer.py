@@ -80,7 +80,23 @@ if "__main__" in __name__:
     import time
     baro = Barometer()
 
+    last = time.time()
+
+    c1,c2,c3,c4,c5=None
+
     while True:
-        print(str(baro.getAltitude()) +" m", str(baro.getPressure()) + " Pa", str(baro.getTemperature()) + " C")
-        time.sleep(1)
+        #print(str(baro.getAltitude()) +" m", str(baro.getPressure()) + " Pa", str(baro.getTemperature()) + " C")
+
+        # rolling window of length 5, without having to use list or for loop
+        c5 = c4
+        c4 = c3
+        c3 = c2
+        c3 = c1
+        c1 = baro.getAltitude()
+        if c5 is not None:
+            dt = last - time.time()
+            tot = c5+c4+c3+c2+c1
+            tot /= 5
+            print(dt, tot)
+        
 
