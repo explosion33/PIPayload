@@ -1,17 +1,14 @@
 import time
 import math
-from filter_tools import integrate, movingAverage, getNoisyAcceleration, getAcceleration
-
 
 
 def rotateZ(angle, accel):
+    """
+    rotateZ() | rotates vector about the z axis\n
+    angle | (float) angle in radians to rotate by\n
+    accel | ((float), (float), (float)) vector to rotate
+    """
     x,y,z = accel
-    # D
-    """
-    |  cos sin 0 |
-    | -sin cos 0 |
-    |  0    0  1 |
-    """
     r1 = (math.cos(angle) * x) + (-math.sin(angle) * y)
     r2 = (math.sin(angle) * x) + (math.cos(angle) * y)
     r3 = z
@@ -19,13 +16,12 @@ def rotateZ(angle, accel):
     return (r1,r2,r3)
 
 def rotateY(angle, accel):
+    """
+    rotateY() | rotates vector about the y axis\n
+    angle | (float) angle in radians to rotate by\n
+    accel | ((float), (float), (float)) vector to rotate
+    """
     x,y,z = accel
-    # C
-    """
-    | 1   0   0  |
-    | 0  cos sin |
-    | 0 -sin cos |
-    """
     r1 = (math.cos(angle) * x) + (math.sin(angle) * z)
     r2 = y
     r3 = (-math.sin(angle) * x) + (math.cos(angle) * z)
@@ -33,13 +29,12 @@ def rotateY(angle, accel):
     return (r1,r2,r3)
 
 def rotateX(angle, accel):
+    """
+    rotateX() | rotates vector about the x axis\n
+    angle | (float) angle in radians to rotate by\n
+    accel | ((float), (float), (float)) vector to rotate
+    """
     x,y,z = accel
-    # B
-    """
-    |  cos sin 0 |
-    | -sin cos 0 |
-    |  0    0  1 |
-    """
     r1 = x
     r2 = (math.cos(angle) * y) + (-math.sin(angle) * z)
     r3 = (math.sin(angle) * y) + (math.cos(angle) * z)
@@ -47,6 +42,11 @@ def rotateX(angle, accel):
     return (r1,r2,r3)
 
 def unRotateAccel(euler, accel):
+    """
+    unRotateAccel() | gets the original X,Y,Z components of a vector rotated in 3D\n
+    euler | ((float), (float), (float)) angle the acceleration vector is rotates by in degrees
+    accel | ((float), (float), (float)) rotated linear acceleration
+    """
     euler = (euler[0]*math.pi/180,euler[1]*math.pi/180,euler[2]*math.pi/180)
 
     a = accel
@@ -55,18 +55,14 @@ def unRotateAccel(euler, accel):
     a = rotateX(-euler[2], a)
 
     return a
-
-def trunc(n,d):
-    m = 10**d
-    return int(n*m)/m
     
 
 if "__main__" in __name__:
     from IMU import IMU
     from Barometer import Barometer
-    baro = Barometer()
     
-
+    
+    baro = Barometer()
     sensors = IMU()
 
     start = time.time()
@@ -82,6 +78,7 @@ if "__main__" in __name__:
         eulers = sensors.euler()
         accels = sensors.linear_accel()
         if eulers != (None, None, None) and accels != (None, None, None):
+            # get elapsed time and delta time
             t = time.time() - start
             dt = t - last
             last = t
@@ -94,6 +91,9 @@ if "__main__" in __name__:
 
             num_accel_readings += 1
 
+            # hard coded rolling window is 35% faster than list representation
+            # further analysis required to determine if this is nesesary
+            # needs to run at 100Hz dt <= 0.01
             c5 = c4
             c4 = c3
             c3 = c2
@@ -109,7 +109,7 @@ if "__main__" in __name__:
                 
                 accels = (tot0,tot1,tot2)
 
-            
+                # additive integral for both velocity and pos
                 velocity[0] += accels[0]*dt
                 velocity[1] += accels[1]*dt
                 velocity[2] += accels[2]*dt
@@ -119,24 +119,21 @@ if "__main__" in __name__:
                 accel_pos[2] += velocity[2]*dt
 
 
+
+
             baro_pos = baro.getAltitude()
 
 
-            mix = 0.7 # 80% acceleromter
-            position = (baro_pos*(1-mix)) + (accel_pos[1]*mix)
+            mix = 0.5 # 70% acceleromter
+            position_y = (baro_pos*(1-mix)) + (accel_pos[1]*mix)
+            position_y = round(position_y,2)
 
             
-                
-
-
             #print(accels, dt)
-            print(int(position), accel_pos[1], baro_pos)
             
-            accel_pos[1] = position
+            accel_pos[0] = round(accel_pos[0],2)
+            accel_pos[1] = position_y
+            accel_pos[2] = round(accel_pos[2],2)
+
+            print(accel_pos[0], ("+" if position_y >= 0 else "") + str(position_y), accel_pos[2])
             
-            
-
-
-        
-
-
