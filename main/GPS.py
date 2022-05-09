@@ -23,8 +23,8 @@ class GPS:
         # Turn on the basic GGA and RMC info (what you typically want)
         this.gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
 
-        # Set update rate to once a second (1hz) which is what you typically want.
-        this.gps.send_command(b"PMTK220,1000")
+        # Set update rate to 1/10 second (0.1hz) which is what you typically want.
+        this.gps.send_command(b"PMTK220,2000")
 
         this.updated = False
 
@@ -46,13 +46,15 @@ class GPS:
             "speed"      : None,
         }
 
+        this.flag = False
+
     def update(this):
         """
         update() | updates stored gps data if new data is available
         """
         hasNewData = this.gps.update()
-        
-        if this.gps.has_fix:
+
+        if hasNewData and this.flag: # this.gps.has_fix:
             this.updated = True
 
             this.data["time"]["month"]  = this.gps.timestamp_utc.tm_mon, # Grab parts of the time from the
@@ -64,15 +66,17 @@ class GPS:
 
             this.data["quality"]   = this.gps.fix_quality
             this.data["latitude"]  = this.gps.latitude
-            this.data["logintude"] = this.gps.longitude
+            this.data["longitude"] = this.gps.longitude
             
 
-            if this.gps.satellites:
-                this.data["satellites"] = this.gps.satellites
-            if this.gps.altitude_m:
-                this.data["altitude"] = this.gps.altitude_m
-            if this.gps.speed_knots:
-                this.data["speed"] = this.gps.speed_knots
+            #if this.gps.satellites:
+            this.data["satellites"] = this.gps.satellites
+            #if this.gps.altitude_m:
+            this.data["altitude"] = this.gps.altitude_m
+            #if this.gps.speed_knots:
+            this.data["speed"] = this.gps.speed_knots
+
+        this.flag = True
 
 
     def getData(this):
@@ -89,13 +93,25 @@ class GPS:
         """
         return this.updated
 
+    def hasFix(this):
+        return this.gps.has_fix
+
 
 if "__main__" in __name__:
+    start_pos = (None,None)
     gps = GPS()
     while True:
         gps.update()
         if gps.hasNewData():
-            print(gps.getData())
-        else:
-            print("no satelite fix")
-        time.sleep(1)
+            data = gps.getData()
+
+            if start_pos == (None, None):
+                start_pos = (data["latitude"], data["longitude"])
+
+            driftX = start_pos[0] - data["latitude"]
+            driftY = start_pos[1] - data["longitude"]
+            print(driftX*111139, driftY*111139, data["altitude"], data["satellites"], data["time"]["second"])
+        elif not gps.hasFix():
+            print("no fix")
+
+        time.sleep(0.5)
